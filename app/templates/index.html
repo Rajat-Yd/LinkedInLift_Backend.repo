@@ -12,6 +12,23 @@
 </head>
 
 <body>
+    <!DOCTYPE html>
+<html>
+<head>
+    <title>LinkedInLift</title>
+</head>
+<body>
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    {% endwith %}
+
     <!-- Loader -->
     <div id="loader">
         <div class="spinner"></div>
@@ -184,7 +201,7 @@
                     <img src="{{ url_for('static', filename='images/Logo 2.png') }}"alt="LinkedInLift Logo">
                 </div>
             </div>
-            <form action="https://formsubmit.co/rajat0911q@gmail.com" method="POST">
+            <form action="{{ url_for('main.submit_form') }}" method="POST">
                 <label for="name">Name</label>
                 <input class="input" type="text" id="name" name="name" placeholder="Your full name" required>
 
