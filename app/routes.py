@@ -2,23 +2,21 @@ from flask import Blueprint, render_template ,request, redirect, url_for, flash 
 
 main = Blueprint('main', __name__)
 
-main.secret_key = 'rajat0911q'
+main.secret_key = '220225012@rajoihskj'
 
 @main.route('/')
 def home():
     return render_template("index.html")
 
-# Add this to handle form submissions
-@main.route('/submit_form', methods=['POST'])
+@main.route('/submit-form', methods=['POST'])
 def submit_form():
     name = request.form.get('name')
     email = request.form.get('email')
     message = request.form.get('message')
-    link = request.form.get('linkedin')
     phone = request.form.get('phone')
+    Link = request.form.get('linkedin')
 
-    # Debugging to see received data
-    print(f"Name: {name}, Email: {email}, Message: {message}, Link: {link}, Phone: {phone}")
+    # Check if data is received
+    print(f"Name: {name}, Email: {email}, Message: {message}, Phone: {phone},Link: {Link}")
 
-    flash("Thank you for reaching out! We'll get back to you soon.")
-    return redirect(url_for('index'))
+    return redirect(url_for('main.home'))

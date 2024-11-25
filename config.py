@@ -1,3 +1,2 @@
-# config.py
-DEBUG = True
-SECRET_KEY = 'your_secret_key'
+main.debug = True
+SECRET_KEY = '220225012@rajoihskj'

@@ -14,7 +14,6 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Form Validation
 document.querySelector('form').addEventListener('submit', function(e) {
     e.preventDefault(); // Prevent form submission for validation
 
@@ -45,13 +44,13 @@ document.querySelector('form').addEventListener('submit', function(e) {
         valid = false;
     }
 
-    // Form Submission
+    // If form is valid, submit the form
     if (valid) {
-        alert("Thank you! Your message has been sent.");
-        // Clear form fields
-        name.value = '';
-        email.value = '';
-        message.value = '';
+        // You can perform additional actions here like showing a success message
+        alert("Thank you! Your message has been sent. W'll Contact you soon !!!");
+        
+        // Proceed with actual form submission to the backend
+        this.submit();  // This submits the form to the Flask backend
     }
 });
 
