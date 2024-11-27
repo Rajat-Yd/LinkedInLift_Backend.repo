@@ -1,50 +1,7 @@
-# # from flask import Blueprint, render_template ,request, redirect, url_for, flash , Flask
-
-# # main = Blueprint('main', __name__)
-
-# # main.secret_key = '220225012@rajoihskj'
-
-# # @main.route('/')
-# # def home():
-# #     return render_template("index.html")
-
-# @main.route('/submit-form', methods=['POST'])
-# def submit_form():
-#     name = request.form.get('name')
-#     email = request.form.get('email')
-#     message = request.form.get('message')
-#     phone = request.form.get('phone')
-#     Link = request.form.get('linkedin')
-
-#     # Check if data is received
-#     print(f"Name: {name}, Email: {email}, Message: {message}, Phone: {phone},Link: {Link}")
-
-#     return redirect(url_for('main.home'))
-
-# from flask import Flask, render_template, request, redirect, url_for
-# from app.models import ContactMessage
-# from app import db
-
-# @app.route('/contact', methods=['POST', 'GET'])
-# def contact():
-#     if request.method == 'POST':
-#         name = request.form['name']
-#         email = request.form['email']
-#         message = request.form['message']
-
-#         # Save to the database
-#         new_message = ContactMessage(name=name, email=email, message=message)
-#         db.session.add(new_message)
-#         db.session.commit()
-
-#         # Redirect to a thank-you page
-#         return redirect(url_for('thank_you'))
-
-#     return render_template('contact.html')
-
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from app.models import ContactMessage  # Import the ContactMessage model
-from app import db  # Import the database instance
+from flask_mail import Message  # Import the database instance
+from app import db, mail
 
 # Create the main Blueprint
 main = Blueprint('main', __name__)
@@ -85,6 +42,8 @@ def contact():
         db.session.add(new_message)
         db.session.commit()
 
+        send_confirmation_email(email)
+
         # Flash a success message (if you want to notify the user)
         flash("Thank you! Your message has been submitted successfully.")
 
@@ -93,6 +52,16 @@ def contact():
 
     # Render the contact form for GET requests
     return render_template('index.html')
+
+def send_confirmation_email(user_email):
+    # Create the confirmation email
+    msg = Message('Thank You for Contacting Us',
+                  recipients=[user_email])  # recipient's email address
+    msg.body = 'Thank you for reaching out to us. We will get back to you soon!'
+    try:
+        mail.send(msg)
+    except Exception as e:
+        print(f"Error sending email: {e}")
 
 # (Optional) Route for a thank-you page
 @main.route('/thank-you')

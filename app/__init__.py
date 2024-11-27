@@ -4,6 +4,9 @@ from flask_migrate import Migrate
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from config import Config
+from flask_mail import Mail
+
+mail = Mail()
 
 # Initialize extensions
 db = SQLAlchemy()
@@ -16,6 +19,7 @@ def create_app():
     # Initialize extensions with the app
     db.init_app(app)
     migrate.init_app(app, db)
+    mail.init_app(app) 
 
     # Initialize Flask-Admin
     admin = Admin(app, name='Admin Panel', template_mode='bootstrap3')
