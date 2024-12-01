@@ -45,6 +45,7 @@ def contact():
         db.session.commit()
 
         try:
+            send_admin_notification(name, email, message, phone, linkedin)
             send_confirmation_email(name, email)
         except Exception as e:
             print(f"Error sending confirmation email: {e}")
@@ -57,6 +58,42 @@ def contact():
 
     # Render the contact form for GET requests
     return render_template('index.html')
+
+def send_admin_notification(name, email, message, phone=None, linkedin=None):
+    subject = f"New Contact Form Submission from {name}"
+    sender_email = "rajat0911q@gmail.com"
+    sender_password = "rvqo jifq mdcs jrdc"
+    admin_email = "rajat0911q@gmail.com"  # Replace with your admin email
+
+    # Email Body
+    email_body = f"""
+    <html>
+    <body>
+        <h3 style="color: #FF5733;">New Contact Form Submission</h3>
+        <p><strong>Name:</strong> {name}</p>
+        <p><strong>Email:</strong> {email}</p>
+        <p><strong>Message:</strong> {message}</p>
+        <p><strong>Phone:</strong> {phone if phone else 'N/A'}</p>
+        <p><strong>LinkedIn:</strong> {linkedin if linkedin else 'N/A'}</p>
+    </body>
+    </html>
+    """
+
+    # Set up MIME message
+    msg = MIMEText(email_body, 'html')  # 'html' specifies the content type
+    msg['Subject'] = subject
+    msg['From'] = sender_email
+    msg['To'] = admin_email
+
+    # Send the email
+    try:
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+            server.login(sender_email, sender_password)
+            server.sendmail(sender_email, admin_email, msg.as_string())
+            print("Admin notification email sent successfully!")
+    except Exception as e:
+        print(f"Error sending admin notification email: {e}")
+
 
 def send_confirmation_email(name, recipient_email):
     subject = "Thank you for contacting LinkedInLift!"
