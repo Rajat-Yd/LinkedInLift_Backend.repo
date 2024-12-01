@@ -2,6 +2,8 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from app.models import ContactMessage  # Import the ContactMessage model
 from flask_mail import Message  # Import the database instance
 from app import db, mail
+from email.mime.text import MIMEText
+import smtplib
 
 # Create the main Blueprint
 main = Blueprint('main', __name__)
@@ -42,7 +44,10 @@ def contact():
         db.session.add(new_message)
         db.session.commit()
 
-        send_confirmation_email(email)
+        try:
+            send_confirmation_email(name, email)
+        except Exception as e:
+            print(f"Error sending confirmation email: {e}")
 
         # Flash a success message (if you want to notify the user)
         flash("Thank you! Your message has been submitted successfully.")
@@ -53,13 +58,35 @@ def contact():
     # Render the contact form for GET requests
     return render_template('index.html')
 
-def send_confirmation_email(user_email):
-    # Create the confirmation email
-    msg = Message('Thank You for Contacting Us',
-                  recipients=[user_email])  # recipient's email address
-    msg.body = 'Thank you for reaching out to us. We will get back to you soon!'
+def send_confirmation_email(name, recipient_email):
+    subject = "Thank you for contacting LinkedInLift!"
+    sender_email = "rajat0911q@gmail.com"
+    sender_password = "rvqo jifq mdcs jrdc"
+
+    # Email Body with Personalization
+    email_body = f"""
+    <html>
+    <body>
+        <h2 style="color: #0077B5;">Hi {name},</h2>
+        <p>Thank you for reaching out to LinkedInLift! We have received your message and will get back to you soon.</p>
+        <p>If you have any further questions, feel free to reply to this email.</p>
+        <p style="color: #0077B5;">Best Regards,<br>LinkedInLift Team</p>
+    </body>
+    </html>
+    """
+
+    # Set up MIME message
+    msg = MIMEText(email_body, 'html')  # 'html' specifies the content type
+    msg['Subject'] = subject
+    msg['From'] = sender_email
+    msg['To'] = recipient_email
+
+    # Send the email
     try:
-        mail.send(msg)
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+            server.login(sender_email, sender_password)
+            server.sendmail(sender_email, recipient_email, msg.as_string())
+            print("Confirmation email sent successfully!")
     except Exception as e:
         print(f"Error sending email: {e}")
 
