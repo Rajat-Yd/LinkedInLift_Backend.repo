@@ -62,7 +62,7 @@ def contact():
 def send_admin_notification(name, email, message, phone=None, linkedin=None):
     subject = f"New Contact Form Submission from {name}"
     sender_email = "rajat0911q@gmail.com"
-    sender_password = "rvqo jifq mdcs jrdc"
+    sender_password = "jeoo ofga nxdt tyok"
     admin_email = "rajat0911q@gmail.com"  # Replace with your admin email
 
     # Email Body
@@ -98,7 +98,7 @@ def send_admin_notification(name, email, message, phone=None, linkedin=None):
 def send_confirmation_email(name, recipient_email):
     subject = "Thank you for contacting LinkedInLift!"
     sender_email = "rajat0911q@gmail.com"
-    sender_password = "rvqo jifq mdcs jrdc"
+    sender_password = "jeoo ofga nxdt tyok"
 
     # Email Body with Personalization
     email_body = f"""

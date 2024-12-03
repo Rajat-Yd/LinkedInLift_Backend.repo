@@ -9,5 +9,5 @@ class Config:
     MAIL_PORT = 587
     MAIL_USE_TLS = True
     MAIL_USERNAME = 'rajat0911q@gmail.com'  # Replace with your email
-    MAIL_PASSWORD = 'rvqo jifq mdcs jrdc'  # Replace with your email password
+    MAIL_PASSWORD = 'jeoo ofga nxdt tyok'  # Replace with your email password
     MAIL_DEFAULT_SENDER = 'rajat0911q@gmail.com'
