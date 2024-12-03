@@ -1,9 +1,23 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from app.models import ContactMessage  # Import the ContactMessage model
-from flask_mail import Message  # Import the database instance
-from app import db, mail
+from app import db  # Import the database instance
 from email.mime.text import MIMEText
 import smtplib
+from dotenv import load_dotenv
+import os
+
+# Load environment variables
+load_dotenv()
+
+# Flask email configuration from environment variables
+SENDER_EMAIL = os.getenv("MAIL_USERNAME")
+SENDER_PASSWORD = os.getenv("MAIL_PASSWORD")
+SMTP_SERVER = os.getenv("MAIL_SERVER")
+SMTP_PORT = int(os.getenv("MAIL_PORT"))
+SECRET_KEY = os.getenv("FLASK_SECRET_KEY")
+
+# Admin email for notifications
+ADMIN_EMAIL = os.getenv("ADMIN_EMAIL")
 
 # Create the main Blueprint
 main = Blueprint('main', __name__)
@@ -48,7 +62,7 @@ def contact():
             send_admin_notification(name, email, message, phone, linkedin)
             send_confirmation_email(name, email)
         except Exception as e:
-            print(f"Error sending confirmation email: {e}")
+            print(f"Error sending email: {e}")
 
         # Flash a success message (if you want to notify the user)
         flash("Thank you! Your message has been submitted successfully.")
@@ -59,11 +73,9 @@ def contact():
     # Render the contact form for GET requests
     return render_template('index.html')
 
+
 def send_admin_notification(name, email, message, phone=None, linkedin=None):
     subject = f"New Contact Form Submission from {name}"
-    sender_email = "rajat0911q@gmail.com"
-    sender_password = "jeoo ofga nxdt tyok"
-    admin_email = "rajat0911q@gmail.com"  # Replace with your admin email
 
     # Email Body
     email_body = f"""
@@ -82,14 +94,14 @@ def send_admin_notification(name, email, message, phone=None, linkedin=None):
     # Set up MIME message
     msg = MIMEText(email_body, 'html')  # 'html' specifies the content type
     msg['Subject'] = subject
-    msg['From'] = sender_email
-    msg['To'] = admin_email
+    msg['From'] = SENDER_EMAIL
+    msg['To'] = ADMIN_EMAIL
 
     # Send the email
     try:
-        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
-            server.login(sender_email, sender_password)
-            server.sendmail(sender_email, admin_email, msg.as_string())
+        with smtplib.SMTP_SSL(SMTP_SERVER, SMTP_PORT) as server:
+            server.login(SENDER_EMAIL, SENDER_PASSWORD)
+            server.sendmail(SENDER_EMAIL, ADMIN_EMAIL, msg.as_string())
             print("Admin notification email sent successfully!")
     except Exception as e:
         print(f"Error sending admin notification email: {e}")
@@ -97,8 +109,6 @@ def send_admin_notification(name, email, message, phone=None, linkedin=None):
 
 def send_confirmation_email(name, recipient_email):
     subject = "Thank you for contacting LinkedInLift!"
-    sender_email = "rajat0911q@gmail.com"
-    sender_password = "jeoo ofga nxdt tyok"
 
     # Email Body with Personalization
     email_body = f"""
@@ -115,22 +125,24 @@ def send_confirmation_email(name, recipient_email):
     # Set up MIME message
     msg = MIMEText(email_body, 'html')  # 'html' specifies the content type
     msg['Subject'] = subject
-    msg['From'] = sender_email
+    msg['From'] = SENDER_EMAIL
     msg['To'] = recipient_email
 
     # Send the email
     try:
-        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
-            server.login(sender_email, sender_password)
-            server.sendmail(sender_email, recipient_email, msg.as_string())
+        with smtplib.SMTP_SSL(SMTP_SERVER, SMTP_PORT) as server:
+            server.login(SENDER_EMAIL, SENDER_PASSWORD)
+            server.sendmail(SENDER_EMAIL, recipient_email, msg.as_string())
             print("Confirmation email sent successfully!")
     except Exception as e:
-        print(f"Error sending email: {e}")
+        print(f"Error sending confirmation email: {e}")
+
 
 # (Optional) Route for a thank-you page
 @main.route('/thank-you')
 def thank_you():
     return render_template('thank_you.html')  # Create a thank_you.html file in the templates folder
+
 
 # Route to view all messages (admin feature, optional)
 @main.route('/messages')
