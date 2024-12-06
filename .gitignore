@@ -1,0 +1,27 @@
+# Environment variables
+.env
+
+# Python files
+*.pyc
+*.pyo
+__pycache__/  
+
+# Virtual environment
+venv/
+
+# Logs and temporary files
+*.log
+*.tmp
+
+# IDE-specific
+.vscode/
+.idea/
+
+# Dependency folders
+*.egg-info/
+dist/
+build/
+
+# System-specific
+.DS_Store
+Thumbs.db
