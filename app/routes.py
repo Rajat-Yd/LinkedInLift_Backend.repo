@@ -150,3 +150,8 @@ def view_messages():
     # Fetch all messages from the database
     messages = ContactMessage.query.all()
     return render_template('messages.html', messages=messages)  # Create a messages.html file
+
+@main.route('/ai-tool')
+def ai_tool():
+    return render_template('ai_tool.html')
+
